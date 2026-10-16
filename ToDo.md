@@ -1,11 +1,14 @@
-## Idées de sujet
+## SUJET
 
-### Inégalités hommes-femmes
+### Biométérologie
 
-Accessibilité des carrières scientifiques, comparaisons par régions
+Influence des différents types de vents sur l'humeur, les taux d'accidents et la criminalité (?)
 
-### Pesticides
 
-### Environnement
+## TODO
 
-Prédire les innondations
+### Collecte des données
+
+-> données Météo (Matthieu)
+
+-> données justice (Jade)
