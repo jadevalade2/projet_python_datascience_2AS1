@@ -110,3 +110,29 @@ def regression_lineaire(df, a="a", b="b", afficher=True):
         plt.show()
 
     return resultats
+
+
+def histogramme(x, titre, xlabel, bins=30):
+    plt.hist(x, bins=bins, edgecolor="white")
+    plt.title(titre)
+    plt.xlabel(xlabel)
+    plt.ylabel("Nombre d'observations")
+    plt.show()
+
+
+def correlation (x, y, titre_grph, titre_axe1, titre_axe2):
+    sansNa = x.notna() & y.notna()
+    x = x[sansNa]
+    y = y[sansNa]
+
+    plt.scatter(x, y, s=0.3)
+
+    pente, ordonnee = np.polyfit(x, y, 1)
+    x1 = np.linspace(x.min(), x.max(), 100)
+    plt.plot(x1, pente * x1 + ordonnee, color="red", label=f"y = {ordonnee:.1f} + {pente:.1f}x")
+
+    plt.title(titre_grph)
+    plt.xlabel(titre_axe1)
+    plt.ylabel(titre_axe2)
+    plt.legend()
+    plt.show()
