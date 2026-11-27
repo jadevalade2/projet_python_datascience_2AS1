@@ -126,6 +126,26 @@ def histogramme(x, titre, xlabel, bins=30):
     plt.ylabel("Nombre d'observations")
     plt.show()
 
+def histogrammes_superposes(x, y, titre, labels, bins=30):
+    """
+    Superpose les histogrammes de x et y.
+    """
+    x = np.asarray(x, dtype=float)
+    y = np.asarray(y, dtype=float)
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.hist(x, bins=bins, alpha=0.55,
+            color="tab:blue", edgecolor="white", label=labels[0], density = True)
+    ax.hist(y, bins=bins, alpha=0.55,
+            color="tab:orange", edgecolor="white", label=labels[1], density = True)
+
+    plt.ylabel("Nombre d'observations")
+    ax.set_title(titre)
+    ax.grid(alpha=0.3)
+    ax.legend()
+    plt.tight_layout()
+    plt.show()
+
 
 def regression(x, y, titre_grph, titre_axe1, titre_axe2):
     """
@@ -150,3 +170,5 @@ def regression(x, y, titre_grph, titre_axe1, titre_axe2):
     res = stats.linregress(x, y)
     print(f"r = {res.rvalue:.3f}  (r² = {res.rvalue**2:.3f})")
     print(f"p-value = {res.pvalue:.3g}")
+
+
