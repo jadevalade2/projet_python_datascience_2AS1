@@ -1,2 +1,9 @@
 lxml
 bs4
+geopandas
+openpyxl
+tqdm
+s3fs
+ipywidgets
+PyYAML
+cartiflette
