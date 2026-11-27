@@ -11,6 +11,10 @@ import re
 
 
 def cartographier(data, variable, titre, var_dep = "dep"):
+    """
+    Prend en argument un dataframe, la variable à prendre en compte et le titre de la carte.
+    Renvoie une carte de la France avec les départements colorisés selon la variable d'intérêt.
+    """
     departements = carti_download(
         values="France",
         crs=4326,
@@ -72,39 +76,39 @@ def extraction_wikipedia(page):
     Extraction des données tabulaires dans la page Wikipédia
     Renvoie un DataFrame
     """
-    tableaux = page.find_all('table', {'class':'wikitable sortable'})
+    tableaux = page.find_all('table', {'class': 'wikitable sortable'})
 
     faitsDiv = list()
-    for tableau in tableaux :
+    for tableau in tableaux:  # On récupère les données des colonnes
         table_body = tableau.find('tbody')
         rows = table_body.find_all('tr')
         liste = list()
         for row in rows:
             cols = row.find_all('td')
             cols = [ele.text.strip() for ele in cols]
-            if len(cols) > 0 : 
+            if len(cols) > 0: 
                 liste.append(cols)
         faitsDiv.append(liste)
 
-    liste_dataf = list()
-    for tableau in faitsDiv :
+    liste_dataf = list()  # On transforme les tableaux en DataFrame
+    for tableau in faitsDiv:
         liste_dataf.append(pd.DataFrame(tableau))
 
     liste_colonnes = list()
 
-    for tableau in tableaux :
+    for tableau in tableaux:
         table_body = tableau.find('tbody')
         rows = table_body.find_all('tr')
         for row in rows:
             cols = row.find_all('th')
-            if len(cols) > 0 : 
+            if len(cols) > 0:
                 cols = [ele.get_text(separator=' ').strip().title() for ele in cols]
                 liste_colonnes.append(cols)
 
     for i in range(len(liste_dataf)):
         liste_dataf[i].columns = liste_colonnes[i]
 
-    faitsDivDF = pd.concat(liste_dataf)
+    faitsDivDF = pd.concat(liste_dataf)  # On rassemble tous les DataFrame dans un grand 
     faitsDivDF = faitsDivDF.reset_index(drop=True)
 
     faitsDivDF = faitsDivDF[["Département(S) [ Note 2 ]", "Résumé"]]
@@ -113,6 +117,9 @@ def extraction_wikipedia(page):
 
 
 def histogramme(x, titre, xlabel, bins=30):
+    """
+    Affiche l'histogramme de la variable x, sur une répartition de 30 barres par défaut.
+    """
     plt.hist(x, bins=bins, edgecolor="white")
     plt.title(titre)
     plt.xlabel(xlabel)
@@ -121,6 +128,10 @@ def histogramme(x, titre, xlabel, bins=30):
 
 
 def regression(x, y, titre_grph, titre_axe1, titre_axe2):
+    """
+    Affiche la régression de la variable x sur la variable y.
+    Imprime également le r² et la p-value de la régression.
+    """
     sansNa = x.notna() & y.notna()
     x = x[sansNa]
     y = y[sansNa]
