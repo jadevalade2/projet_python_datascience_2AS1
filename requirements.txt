@@ -1,5 +1,6 @@
 lxml
 bs4
+duckdb<2
 geopandas
 openpyxl
 tqdm
