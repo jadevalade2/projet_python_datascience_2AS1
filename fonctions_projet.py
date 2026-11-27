@@ -4,6 +4,8 @@ import numpy as np
 import geopandas as gpd
 import matplotlib.pyplot as plt
 from cartiflette import carti_download
+from scipy import stats
+
 
 def cartographier(data, variable, titre, var_dep = "dep"):
     departements = carti_download(
@@ -70,7 +72,7 @@ def histogramme(x, titre, xlabel, bins=30):
     plt.show()
 
 
-def correlation(x, y, titre_grph, titre_axe1, titre_axe2):
+def regression(x, y, titre_grph, titre_axe1, titre_axe2):
     sansNa = x.notna() & y.notna()
     x = x[sansNa]
     y = y[sansNa]
@@ -86,3 +88,6 @@ def correlation(x, y, titre_grph, titre_axe1, titre_axe2):
     plt.ylabel(titre_axe2)
     plt.legend()
     plt.show()
+    res = stats.linregress(x, y)
+    print(f"r = {res.rvalue:.3f}  (r² = {res.rvalue**2:.3f})")
+    print(f"p-value = {res.pvalue:.3g}")
