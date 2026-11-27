@@ -5,6 +5,9 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 from cartiflette import carti_download
 from scipy import stats
+import requests
+import bs4
+import re
 
 
 def cartographier(data, variable, titre, var_dep = "dep"):
@@ -62,6 +65,51 @@ def cartographier(data, variable, titre, var_dep = "dep"):
     plt.title(titre)
     plt.axis("off")
     plt.show()
+
+
+def extraction_wikipedia(page):
+    """
+    Extraction des données tabulaires dans la page Wikipédia
+    Renvoie un DataFrame
+    """
+    tableaux = page.find_all('table', {'class':'wikitable sortable'})
+
+    faitsDiv = list()
+    for tableau in tableaux :
+        table_body = tableau.find('tbody')
+        rows = table_body.find_all('tr')
+        liste = list()
+        for row in rows:
+            cols = row.find_all('td')
+            cols = [ele.text.strip() for ele in cols]
+            if len(cols) > 0 : 
+                liste.append(cols)
+        faitsDiv.append(liste)
+
+    liste_dataf = list()
+    for tableau in faitsDiv :
+        liste_dataf.append(pd.DataFrame(tableau))
+
+    liste_colonnes = list()
+
+    for tableau in tableaux :
+        table_body = tableau.find('tbody')
+        rows = table_body.find_all('tr')
+        for row in rows:
+            cols = row.find_all('th')
+            if len(cols) > 0 : 
+                cols = [ele.get_text(separator=' ').strip().title() for ele in cols]
+                liste_colonnes.append(cols)
+
+    for i in range(len(liste_dataf)):
+        liste_dataf[i].columns = liste_colonnes[i]
+
+    faitsDivDF = pd.concat(liste_dataf)
+    faitsDivDF = faitsDivDF.reset_index(drop=True)
+
+    faitsDivDF = faitsDivDF[["Département(S) [ Note 2 ]", "Résumé"]]
+
+    return faitsDivDF
 
 
 def histogramme(x, titre, xlabel, bins=30):
